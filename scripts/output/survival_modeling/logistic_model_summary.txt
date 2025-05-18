@@ -1,0 +1,30 @@
+
+Call:
+glm(formula = logistic_formula, family = "binomial", data = train_data)
+
+Coefficients:
+                        Estimate Std. Error z value Pr(>|z|)    
+(Intercept)            -1.667165   0.107043 -15.575   <2e-16 ***
+Age                     0.001411   0.001226   1.151   0.2499    
+Tumor_Size              0.003807   0.007758   0.491   0.6236    
+Tumor_Growth_Rate      -0.029048   0.025574  -1.136   0.2560    
+GenderMale              0.071680   0.042768   1.676   0.0937 .  
+Tumor_TypeMalignant    -0.017425   0.042788  -0.407   0.6838    
+StageII                -0.103977   0.060474  -1.719   0.0855 .  
+StageIII               -0.041312   0.060229  -0.686   0.4928    
+StageIV                -0.040160   0.060243  -0.667   0.5050    
+Radiation_TreatmentYes  0.011961   0.042790   0.280   0.7798    
+Surgery_PerformedYes    0.002266   0.042766   0.053   0.9577    
+ChemotherapyYes         0.033193   0.042786   0.776   0.4379    
+Family_HistoryYes      -0.030626   0.042777  -0.716   0.4740    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 14257  on 16000  degrees of freedom
+Residual deviance: 14247  on 15988  degrees of freedom
+AIC: 14273
+
+Number of Fisher Scoring iterations: 3
+
