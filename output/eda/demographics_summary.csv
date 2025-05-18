@@ -1,0 +1,2 @@
+"count", "mean_age", "median_age", "min_age", "max_age", "gender_ratio"
+20000,    49.4337,     49,            20,       79,       0.996805111821086

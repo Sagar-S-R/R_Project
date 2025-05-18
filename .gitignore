@@ -1,0 +1,31 @@
+# Brain_Tumor_Analysis_Project/.gitignore
+
+# Exclude large data files (raw and processed datasets)
+data/raw/*
+data/processed/*
+
+# R-specific exclusions
+*.Rproj
+.Rproj.user/
+.Rhistory
+.RData
+.Rds
+
+# Exclude temporary files and logs
+*.log
+*.tmp
+*.bak
+
+# Exclude OS-specific files
+.DS_Store
+Thumbs.db
+
+# Allow specific files in data/ if they are small and necessary (e.g., a sample dataset under 100 MB)
+# If you have a small sample dataset, you can explicitly allow it like this:
+# !data/raw/sample_dataset.csv
+
+# Allow essential project files, outputs, and plots
+!README.md
+!scripts/
+!output/
+!plots/
