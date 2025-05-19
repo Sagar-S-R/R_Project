@@ -22,40 +22,50 @@ write.csv(demographics, "output/eda/demographics_summary.csv", row.names = FALSE
 
 # Age distribution
 age_plot <- ggplot(brain_tumor_data, aes(x = Age)) +
-  geom_histogram(binwidth = 5, fill = "steelblue", color = "black") +
+  geom_histogram(binwidth = 5, fill = "#1f77b4", color = "black") +
   labs(title = "Age Distribution of Brain Tumor Patients", x = "Age", y = "Count") +
-  theme_minimal()
+  theme_minimal() +
+  theme(plot.background = element_rect(fill = "white", color = NA),
+        panel.background = element_rect(fill = "white", color = NA))
 ggsave("plots/eda/age_distribution.png", age_plot, width = 8, height = 6)
 
 # Gender distribution
 gender_plot <- ggplot(brain_tumor_data, aes(x = Gender, fill = Gender)) +
   geom_bar() +
   labs(title = "Gender Distribution", x = "Gender", y = "Count") +
+  scale_fill_manual(values = c("Male" = "#ff7f0e", "Female" = "#d62728")) +
   theme_minimal() +
-  scale_fill_brewer(palette = "Set1")
+  theme(plot.background = element_rect(fill = "white", color = NA),
+        panel.background = element_rect(fill = "white", color = NA))
 ggsave("plots/eda/gender_distribution.png", gender_plot, width = 8, height = 6)
 
 # ---- ANALYSIS 2: Tumor Characteristics Analysis ----
 tumor_type_plot <- ggplot(brain_tumor_data, aes(x = Tumor_Type, fill = Tumor_Type)) +
   geom_bar() +
   labs(title = "Distribution of Brain Tumor Types", x = "Tumor Type", y = "Count") +
+  scale_fill_manual(values = c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd")) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_fill_brewer(palette = "Set2")
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.background = element_rect(fill = "white", color = NA),
+        panel.background = element_rect(fill = "white", color = NA))
 ggsave("plots/eda/tumor_type_distribution.png", tumor_type_plot, width = 10, height = 6)
 
 tumor_size_plot <- ggplot(brain_tumor_data, aes(x = Tumor_Size)) +
-  geom_histogram(binwidth = 0.5, fill = "darkgreen", color = "black") +
+  geom_histogram(binwidth = 0.5, fill = "#2ca02c", color = "black") +
   labs(title = "Brain Tumor Size Distribution", x = "Tumor Size (cm)", y = "Count") +
-  theme_minimal()
+  theme_minimal() +
+  theme(plot.background = element_rect(fill = "white", color = NA),
+        panel.background = element_rect(fill = "white", color = NA))
 ggsave("plots/eda/tumor_size_distribution.png", tumor_size_plot, width = 8, height = 6)
 
 location_plot <- ggplot(brain_tumor_data, aes(x = Location, fill = Location)) +
   geom_bar() +
   labs(title = "Brain Tumor Location Distribution", x = "Location", y = "Count") +
+  scale_fill_manual(values = c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b")) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_fill_brewer(palette = "Set3")
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.background = element_rect(fill = "white", color = NA),
+        panel.background = element_rect(fill = "white", color = NA))
 ggsave("plots/eda/location_distribution.png", location_plot, width = 10, height = 6)
 
 # ---- ANALYSIS 3: Treatment Analysis ----
@@ -69,17 +79,13 @@ brain_tumor_data$treatment_combo <- paste(
 treatment_combo_plot <- ggplot(brain_tumor_data, aes(x = treatment_combo, fill = treatment_combo)) +
   geom_bar() +
   labs(title = "Treatment Combinations for Brain Tumors", x = "Treatment Combination", y = "Count") +
+  scale_fill_manual(values = c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f")) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  guides(fill = FALSE)
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.background = element_rect(fill = "white", color = NA),
+        panel.background = element_rect(fill = "white", color = NA),
+        legend.position = "none")
 ggsave("plots/eda/treatment_combinations.png", treatment_combo_plot, width = 10, height = 6)
-
-treatment_by_type <- ggplot(brain_tumor_data, aes(x = Tumor_Type, fill = treatment_combo)) +
-  geom_bar(position = "fill") +
-  labs(title = "Treatment Approaches by Brain Tumor Type", x = "Tumor Type", y = "Proportion") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-ggsave("plots/eda/treatment_by_tumor_type.png", treatment_by_type, width = 10, height = 6)
 
 # ---- ANALYSIS 4: Correlation Analysis ----
 numeric_vars <- brain_tumor_data %>%
@@ -89,5 +95,5 @@ write.csv(correlation_matrix, "output/eda/correlation_matrix.csv")
 
 png("plots/eda/correlation_plot.png", width = 800, height = 800)
 corrplot(correlation_matrix, method = "circle", type = "upper", order = "hclust",
-         tl.col = "black", tl.srt = 45)
+         tl.col = "black", tl.srt = 45, col = colorRampPalette(c("#d62728", "#1f77b4"))(200))
 dev.off()

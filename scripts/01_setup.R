@@ -1,7 +1,7 @@
 required_packages <- c("tidyverse", "caret", "corrplot", "rpart", "rpart.plot", 
                       "randomForest", "e1071", "glmnet", "gbm", "survival", 
                       "survminer", "cluster", "factoextra", "skimr", "MASS",
-                      "pROC", "mice")
+                      "pROC", "mice", "pROC")
 
 for (pkg in required_packages) {
   if (!requireNamespace(pkg, quietly = TRUE)) {
