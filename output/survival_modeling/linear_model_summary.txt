@@ -1,0 +1,20 @@
+
+Call:
+lm(formula = survival_formula, data = train_data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-13.2880  -2.0010   0.0105   2.0618  10.5916 
+
+Coefficients:
+              Estimate Std. Error  t value Pr(>|t|)    
+(Intercept) 100.064134   0.072267 1384.639   <2e-16 ***
+Age           0.005046   0.004986    1.012    0.312    
+Tumor_Size   -2.810895   0.047997  -58.565   <2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.029 on 15997 degrees of freedom
+Multiple R-squared:  0.7305,	Adjusted R-squared:  0.7304 
+F-statistic: 2.168e+04 on 2 and 15997 DF,  p-value: < 2.2e-16
+

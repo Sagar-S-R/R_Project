@@ -68,25 +68,6 @@ location_plot <- ggplot(brain_tumor_data, aes(x = Location, fill = Location)) +
         panel.background = element_rect(fill = "white", color = NA))
 ggsave("plots/eda/location_distribution.png", location_plot, width = 10, height = 6)
 
-# ---- ANALYSIS 3: Treatment Analysis ----
-brain_tumor_data$treatment_combo <- paste(
-  ifelse(brain_tumor_data$Radiation_Treatment == "Yes", "Rad", "NoRad"),
-  ifelse(brain_tumor_data$Surgery_Performed == "Yes", "Surg", "NoSurg"),
-  ifelse(brain_tumor_data$Chemotherapy == "Yes", "Chemo", "NoChemo"),
-  sep = "_"
-)
-
-treatment_combo_plot <- ggplot(brain_tumor_data, aes(x = treatment_combo, fill = treatment_combo)) +
-  geom_bar() +
-  labs(title = "Treatment Combinations for Brain Tumors", x = "Treatment Combination", y = "Count") +
-  scale_fill_manual(values = c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f")) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.background = element_rect(fill = "white", color = NA),
-        panel.background = element_rect(fill = "white", color = NA),
-        legend.position = "none")
-ggsave("plots/eda/treatment_combinations.png", treatment_combo_plot, width = 10, height = 6)
-
 # ---- ANALYSIS 4: Correlation Analysis ----
 numeric_vars <- brain_tumor_data %>%
   select(Age, Tumor_Size, Survival_Rate, Tumor_Growth_Rate)
