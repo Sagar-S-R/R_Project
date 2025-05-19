@@ -1,0 +1,88 @@
+=== Exploratory Data Analysis Results ===
+
+1. Patient Demographics
+-----------------------
+Demographics Summary:
+  count mean_age median_age min_age max_age gender_ratio
+1 20000  49.4337         49      20      79    0.9968051
+
+Age distribution plot saved as: plots/eda/age_distribution.png
+
+Gender distribution plot saved as: plots/eda/gender_distribution.png
+
+2. Tumor Characteristics
+-----------------------
+Tumor type distribution plot saved as: plots/eda/tumor_type_distribution.png
+
+Tumor size distribution plot saved as: plots/eda/tumor_size_distribution.png
+
+Tumor location distribution plot saved as: plots/eda/location_distribution.png
+
+3. Statistical Tests
+-----------------------
+3.1 T-test: Tumor Size vs Tumor Type (Malignant/Benign)
+T-test Result (Tumor_Size vs Tumor_Type):
+
+	Welch Two Sample t-test
+
+data:  tumor_size_malignant and tumor_size_benign
+t = 0.89548, df = 19994, p-value = 0.3705
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.02724896  0.07308950
+sample estimates:
+mean of x mean of y 
+ 4.957645  4.934725 
+
+
+Boxplot saved as: plots/eda/tumor_size_vs_tumor_type_boxplot.png
+
+3.2 Chi-Square Test: Radiation Treatment vs Tumor Type
+Chi-Square Test Result (Radiation_Treatment vs Tumor_Type):
+
+	Pearson's Chi-squared test with Yates' continuity correction
+
+data:  contingency_table
+X-squared = 1.7649, df = 1, p-value = 0.184
+
+
+Bar plot saved as: plots/eda/radiation_vs_tumor_type_barplot.png
+
+3.3 ANOVA: Survival Rate vs Tumor Stage
+ANOVA Result (Survival_Rate vs Stage):
+               Df Sum Sq Mean Sq F value Pr(>F)
+Stage           3    122   40.62   1.188  0.313
+Residuals   19996 683903   34.20               
+
+Boxplot saved as: plots/eda/survival_rate_vs_stage_boxplot.png
+
+4. Correlation Analysis
+-----------------------
+Correlation Matrix:
+                         Age Tumor_Size Survival_Rate Tumor_Growth_Rate
+Age                1.0000000  0.9609012    -0.8204958         0.9111029
+Tumor_Size         0.9609012  1.0000000    -0.8545980         0.9497525
+Survival_Rate     -0.8204958 -0.8545980     1.0000000        -0.8356916
+Tumor_Growth_Rate  0.9111029  0.9497525    -0.8356916         1.0000000
+
+null device 
+          1 
+Correlation plot saved as: plots/eda/correlation_plot.png
+
+Correlation Test Result (Tumor_Size vs Survival_Rate):
+
+	Pearson's product-moment correlation
+
+data:  brain_tumor_data$Tumor_Size and brain_tumor_data$Survival_Rate
+t = -232.73, df = 19998, p-value < 2.2e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.8582916 -0.8508159
+sample estimates:
+      cor 
+-0.854598 
+
+
+Scatterplot saved as: plots/eda/tumor_size_vs_survival_rate_scatterplot.png
+
+=== End of Exploratory Data Analysis Results ===
