@@ -165,11 +165,14 @@ dimnames(cm_combined) <- dimnames(cm_table)
 sink(); sink("output/advanced_modeling/logistic_regression_confusion_matrix.txt", append = TRUE)
 print(cm_combined)
 sink(); sink("output/advanced_modeling/advanced_modeling_results.txt", append = TRUE)
+cm_df <- as.data.frame(as.table(cm_table))
+colnames(cm_df) <- c("Prediction", "Reference", "Freq")
 png("plots/advanced_modeling/logistic_regression_confusion_matrix.png", width = 800, height = 600)
 ggplot(cm_df, aes(x = Reference, y = Prediction, fill = Freq)) +
   geom_tile() + geom_text(aes(label = Freq), color = "white") +
   scale_fill_gradient(low = "blue", high = "red") +
-  labs(title = "Logistic Regression Confusion Matrix", x = "Actual", y = "Predicted") + theme_minimal()
+  labs(title = "Logistic Regression Confusion Matrix", x = "Actual", y = "Predicted") +
+  theme_minimal()
 dev.off()
 
 # Close all graphics devices
