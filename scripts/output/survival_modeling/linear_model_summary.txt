@@ -1,0 +1,30 @@
+
+Call:
+lm(formula = survival_formula, data = train_data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-30.6812 -14.8256   0.0592  14.8818  30.9312 
+
+Coefficients:
+                        Estimate Std. Error t value Pr(>|t|)    
+(Intercept)            71.037648   0.681937 104.170   <2e-16 ***
+Age                    -0.016535   0.007812  -2.117   0.0343 *  
+Tumor_Size             -0.002113   0.049425  -0.043   0.9659    
+Tumor_Growth_Rate      -0.097066   0.162904  -0.596   0.5513    
+GenderMale             -0.173769   0.272439  -0.638   0.5236    
+Tumor_TypeMalignant     0.105290   0.272584   0.386   0.6993    
+StageII                -0.352405   0.384505  -0.917   0.3594    
+StageIII                0.194442   0.386938   0.503   0.6153    
+StageIV                -0.235005   0.387134  -0.607   0.5438    
+Radiation_TreatmentYes  0.172292   0.272601   0.632   0.5274    
+Surgery_PerformedYes    0.286045   0.272457   1.050   0.2938    
+ChemotherapyYes        -0.063844   0.272530  -0.234   0.8148    
+Family_HistoryYes      -0.161719   0.272501  -0.593   0.5529    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 17.23 on 15988 degrees of freedom
+Multiple R-squared:  0.0006091,	Adjusted R-squared:  -0.000141 
+F-statistic: 0.812 on 12 and 15988 DF,  p-value: 0.6384
+
