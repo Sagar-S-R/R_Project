@@ -1,0 +1,5 @@
+Correlation Matrix:
+                        Age Tumor_Size Tumor_Growth_Rate
+Age               1.0000000  0.9609012         0.9111029
+Tumor_Size        0.9609012  1.0000000         0.9497525
+Tumor_Growth_Rate 0.9111029  0.9497525         1.0000000

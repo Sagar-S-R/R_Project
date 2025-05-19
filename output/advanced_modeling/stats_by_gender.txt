@@ -1,0 +1,22 @@
+Stats by Gender:
+
+ Descriptive statistics by group 
+group: Female
+                  vars     n mean   sd median trimmed  mad min  max range skew
+Age                  1 10016 0.50 0.30   0.49    0.50 0.38   0 1.00  1.00 0.01
+Tumor_Size           2 10016 0.51 0.20   0.51    0.51 0.25   0 1.00  1.00 0.01
+Tumor_Growth_Rate    3 10016 0.50 0.18   0.50    0.50 0.22   0 0.98  0.97 0.01
+                  kurtosis se
+Age                  -1.20  0
+Tumor_Size           -1.03  0
+Tumor_Growth_Rate    -0.84  0
+------------------------------------------------------------ 
+group: Male
+                  vars    n mean   sd median trimmed  mad min  max range skew
+Age                  1 9984 0.50 0.29   0.49    0.50 0.38   0 1.00  1.00 0.01
+Tumor_Size           2 9984 0.51 0.20   0.51    0.51 0.25   0 0.98  0.98 0.01
+Tumor_Growth_Rate    3 9984 0.50 0.18   0.50    0.50 0.22   0 1.00  1.00 0.02
+                  kurtosis se
+Age                  -1.21  0
+Tumor_Size           -1.05  0
+Tumor_Growth_Rate    -0.86  0

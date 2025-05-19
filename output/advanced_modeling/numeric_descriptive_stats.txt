@@ -1,0 +1,9 @@
+Numeric Descriptive Statistics:
+                      N      Mean    Median        SD Min Max Range       IQR
+Age               20000 0.4988763 0.4915254 0.2947338   0   1     1 0.5254237
+Tumor_Size        20000 0.5107493 0.5117184 0.2006522   0   1     1 0.3363861
+Tumor_Growth_Rate 20000 0.5005875 0.5004234 0.1820670   0   1     1 0.2916181
+                     Skewness Kurtosis
+Age               0.009532157 1.795973
+Tumor_Size        0.007362732 1.963110
+Tumor_Growth_Rate 0.014697104 2.150409

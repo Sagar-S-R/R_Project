@@ -1,0 +1,15 @@
+WARNING: Survival_Binary has one level. Creating Survival_Binary_New.
+Threshold: 86.45368 
+
+    0     1 
+10000 10000 
+pdf 
+  2 
+pdf 
+  2 
+Training class distribution:
+
+   0    1 
+5269 5296 
+pdf 
+  2 
