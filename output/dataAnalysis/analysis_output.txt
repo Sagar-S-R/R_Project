@@ -1,0 +1,137 @@
+Original Data Summary:
+Dimensions: 20000 20 
+First few rows:
+  Patient_ID Age Gender Tumor_Type Tumor_Size Location       Histology Stage
+1          1  73   Male  Malignant   7.548357 Temporal     Astrocytoma   III
+2          2  26   Male     Benign   2.530868 Parietal    Glioblastoma    II
+3          3  31   Male     Benign   3.423844 Parietal      Meningioma     I
+4          4  29   Male  Malignant   3.661515 Temporal Medulloblastoma    IV
+5          5  54 Female     Benign   5.282923 Parietal    Glioblastoma     I
+6          6  27   Male  Malignant   2.582932  Frontal     Astrocytoma     I
+      Symptom_1     Symptom_2 Symptom_3 Radiation_Treatment Surgery_Performed
+1 Vision Issues      Seizures  Seizures                   0                 0
+2      Headache      Headache    Nausea                   1                 1
+3 Vision Issues      Headache  Seizures                   0                 0
+4 Vision Issues      Seizures  Headache                   1                 0
+5      Headache      Headache  Seizures                   0                 0
+6 Vision Issues Vision Issues  Headache                   1                 1
+  Chemotherapy Survival_Rate Tumor_Growth_Rate Family_History MRI_Result
+1            0      77.66972          3.878664              0   8.017437
+2            1      95.95073          1.350431              1   2.981359
+3            0      90.41130          1.430966              0   3.625109
+4            1      89.94173          2.004633              1   3.292571
+5            1      88.29467          2.194437              0   5.230447
+6            0      93.01443          1.095210              0   2.940340
+  Follow_Up_Required Survival_Binary
+1                  1            Good
+2                  1            Good
+3                  0            Good
+4                  0            Good
+5                  1            Good
+6                  1            Good
+
+Count of NA values per column:
+         Patient_ID                 Age              Gender          Tumor_Type 
+                  0                   0                   0                   0 
+         Tumor_Size            Location           Histology               Stage 
+                  0                   0                   0                   0 
+          Symptom_1           Symptom_2           Symptom_3 Radiation_Treatment 
+                  0                   0                   0                   0 
+  Surgery_Performed        Chemotherapy       Survival_Rate   Tumor_Growth_Rate 
+                  0                   0                   0                   0 
+     Family_History          MRI_Result  Follow_Up_Required     Survival_Binary 
+                  0                   0                   0                   0 
+
+Unique values in Survival_Binary: Good 
+
+Survival_Binary levels after conversion: Good 
+
+Data After Preprocessing:
+Dimensions: 20000 19 
+      Age           Gender          Tumor_Type      Tumor_Size    
+ Min.   :20.00   Female:10016   Benign   : 9970   Min.   :0.3394  
+ 1st Qu.:34.00   Male  : 9984   Malignant:10030   1st Qu.:3.4191  
+ Median :49.00                                    Median :4.9550  
+ Mean   :49.43                                    Mean   :4.9462  
+ 3rd Qu.:65.00                                    3rd Qu.:6.4532  
+ Max.   :79.00                                    Max.   :9.3591  
+                                                                  
+      Location              Histology       Stage          
+ Frontal  :4925   Astrocytoma    :4937   Length:20000      
+ Occipital:4967   Glioblastoma   :5068   Class :character  
+ Parietal :4990   Medulloblastoma:4979   Mode  :character  
+ Temporal :5118   Meningioma     :5016                     
+                                                           
+                                                           
+                                                           
+         Symptom_1            Symptom_2            Symptom_3   
+ Headache     :5045   Headache     :4996   Headache     :4954  
+ Nausea       :4969   Nausea       :4931   Nausea       :5012  
+ Seizures     :5028   Seizures     :5054   Seizures     :5027  
+ Vision Issues:4958   Vision Issues:5019   Vision Issues:5007  
+                                                               
+                                                               
+                                                               
+ Radiation_Treatment Surgery_Performed  Chemotherapy       Survival_Rate   
+ Length:20000        Length:20000       Length:20000       Min.   : 67.10  
+ Class :character    Class :character   Class :character   1st Qu.: 82.03  
+ Mode  :character    Mode  :character   Mode  :character   Median : 86.45  
+                                                           Mean   : 86.41  
+                                                           3rd Qu.: 90.78  
+                                                           Max.   :100.00  
+                                                                           
+ Tumor_Growth_Rate Family_History                   MRI_Result   
+ Min.   :-0.1596   Length:20000       -0.268095861590316 :    1  
+ 1st Qu.: 1.6979   Class :character   -0.0735424209661049:    1  
+ Median : 2.4692   Mode  :character   0.0623378182559169 :    1  
+ Mean   : 2.4701                      0.0961732565491289 :    1  
+ 3rd Qu.: 3.2298                      0.121280954071133  :    1  
+ Max.   : 5.0936                      0.222160953958294  :    1  
+                                      (Other)            :19994  
+ Follow_Up_Required Survival_Binary
+ Length:20000       Good:20000     
+ Class :character                  
+ Mode  :character                  
+                                   
+                                   
+                                   
+                                   
+
+Sampling 1000 rows for clearer visualization
+
+Survival Prediction Model Summary:
+
+Call:
+lm(formula = Survival_Rate ~ Age + Tumor_Size + Tumor_Growth_Rate + 
+    Tumor_Type, data = data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-12.8964  -2.0145   0.0209   2.0572  11.2639 
+
+Coefficients:
+                      Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)         100.037559   0.067358 1485.161   <2e-16 ***
+Age                   0.001391   0.004412    0.315    0.752    
+Tumor_Size           -2.021667   0.055827  -36.213   <2e-16 ***
+Tumor_Growth_Rate    -1.499852   0.070966  -21.135   <2e-16 ***
+Tumor_TypeMalignant   0.013941   0.042483    0.328    0.743    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.004 on 19995 degrees of freedom
+Multiple R-squared:  0.7362,	Adjusted R-squared:  0.7362 
+F-statistic: 1.395e+04 on 4 and 19995 DF,  p-value: < 2.2e-16
+
+
+--- KEY CORRELATIONS ---
+Age vs Tumor Size:  0.9609012 
+Age vs Survival Rate:  -0.8204958 
+Tumor Size vs Survival Rate:  -0.854598 
+Tumor Growth Rate vs Survival Rate:  -0.8356916 
+
+Correlations for Good Survival group:
+Age vs Tumor Size:  0.9609012 
+Tumor Size vs Survival Rate:  -0.854598 
+
+All visualizations saved to plots/dataAnalysis directory.
