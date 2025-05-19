@@ -1,0 +1,245 @@
+Structure of the dataset:
+'data.frame':	20000 obs. of  20 variables:
+ $ Patient_ID         : int  1 2 3 4 5 6 7 8 9 10 ...
+ $ Age                : int  73 26 31 29 54 27 72 61 50 54 ...
+ $ Gender             : chr  "Male" "Male" "Male" "Male" ...
+ $ Tumor_Type         : chr  "Malignant" "Benign" "Benign" "Malignant" ...
+ $ Tumor_Size         : num  7.55 2.53 3.42 3.66 5.28 ...
+ $ Location           : chr  "Temporal" "Parietal" "Parietal" "Temporal" ...
+ $ Histology          : chr  "Astrocytoma" "Glioblastoma" "Meningioma" "Medulloblastoma" ...
+ $ Stage              : chr  "III" "II" "I" "IV" ...
+ $ Symptom_1          : chr  "Vision Issues" "Headache" "Vision Issues" "Vision Issues" ...
+ $ Symptom_2          : chr  "Seizures" "Headache" "Headache" "Seizures" ...
+ $ Symptom_3          : chr  "Seizures" "Nausea" "Seizures" "Headache" ...
+ $ Radiation_Treatment: int  0 1 0 1 0 1 1 1 0 1 ...
+ $ Surgery_Performed  : int  0 1 0 0 0 1 0 1 1 0 ...
+ $ Chemotherapy       : int  0 1 0 1 1 0 1 0 1 0 ...
+ $ Survival_Rate      : num  77.7 96 90.4 89.9 88.3 ...
+ $ Tumor_Growth_Rate  : num  3.88 1.35 1.43 2 2.19 ...
+ $ Family_History     : int  0 1 0 1 0 0 0 0 0 1 ...
+ $ MRI_Result         : num  8.02 2.98 3.63 3.29 5.23 ...
+ $ Follow_Up_Required : int  1 1 0 0 1 1 0 0 1 1 ...
+ $ Survival_Binary    : chr  "Good" "Good" "Good" "Good" ...
+
+Summary of the dataset:
+   Patient_ID         Age           Gender           Tumor_Type       
+ Min.   :    1   Min.   :20.00   Length:20000       Length:20000      
+ 1st Qu.: 5001   1st Qu.:34.00   Class :character   Class :character  
+ Median :10000   Median :49.00   Mode  :character   Mode  :character  
+ Mean   :10000   Mean   :49.43                                        
+ 3rd Qu.:15000   3rd Qu.:65.00                                        
+ Max.   :20000   Max.   :79.00                                        
+   Tumor_Size       Location          Histology            Stage          
+ Min.   :0.3394   Length:20000       Length:20000       Length:20000      
+ 1st Qu.:3.4191   Class :character   Class :character   Class :character  
+ Median :4.9550   Mode  :character   Mode  :character   Mode  :character  
+ Mean   :4.9462                                                           
+ 3rd Qu.:6.4532                                                           
+ Max.   :9.3591                                                           
+  Symptom_1          Symptom_2          Symptom_3         Radiation_Treatment
+ Length:20000       Length:20000       Length:20000       Min.   :0.000      
+ Class :character   Class :character   Class :character   1st Qu.:0.000      
+ Mode  :character   Mode  :character   Mode  :character   Median :1.000      
+                                                          Mean   :0.501      
+                                                          3rd Qu.:1.000      
+                                                          Max.   :1.000      
+ Surgery_Performed  Chemotherapy    Survival_Rate    Tumor_Growth_Rate
+ Min.   :0.000     Min.   :0.0000   Min.   : 67.10   Min.   :-0.1596  
+ 1st Qu.:0.000     1st Qu.:0.0000   1st Qu.: 82.03   1st Qu.: 1.6979  
+ Median :1.000     Median :1.0000   Median : 86.45   Median : 2.4692  
+ Mean   :0.503     Mean   :0.5049   Mean   : 86.41   Mean   : 2.4701  
+ 3rd Qu.:1.000     3rd Qu.:1.0000   3rd Qu.: 90.78   3rd Qu.: 3.2298  
+ Max.   :1.000     Max.   :1.0000   Max.   :100.00   Max.   : 5.0936  
+ Family_History     MRI_Result      Follow_Up_Required Survival_Binary   
+ Min.   :0.0000   Min.   :-0.2681   Min.   :0.000      Length:20000      
+ 1st Qu.:0.0000   1st Qu.: 3.5920   1st Qu.:0.000      Class :character  
+ Median :0.0000   Median : 5.1897   Median :1.000      Mode  :character  
+ Mean   :0.4999   Mean   : 5.1945   Mean   :0.505                        
+ 3rd Qu.:1.0000   3rd Qu.: 6.7734   3rd Qu.:1.000                        
+ Max.   :1.0000   Max.   :10.6930   Max.   :1.000                        
+
+Detailed skim summary:
+── Data Summary ────────────────────────
+                           Values
+Name                       data  
+Number of rows             20000 
+Number of columns          20    
+_______________________          
+Column type frequency:           
+  character                9     
+  numeric                  11    
+________________________         
+Group variables            None  
+
+── Variable type: character ────────────────────────────────────────────────────
+  skim_variable   n_missing complete_rate min max empty n_unique whitespace
+1 Gender                  0             1   4   6     0        2          0
+2 Tumor_Type              0             1   6   9     0        2          0
+3 Location                0             1   7   9     0        4          0
+4 Histology               0             1  10  15     0        4          0
+5 Stage                   0             1   1   3     0        4          0
+6 Symptom_1               0             1   6  13     0        4          0
+7 Symptom_2               0             1   6  13     0        4          0
+8 Symptom_3               0             1   6  13     0        4          0
+9 Survival_Binary         0             1   4   4     0        1          0
+
+── Variable type: numeric ──────────────────────────────────────────────────────
+   skim_variable       n_missing complete_rate      mean       sd     p0     p25
+ 1 Patient_ID                  0             1 10000.    5774.     1     5001.  
+ 2 Age                         0             1    49.4     17.4   20       34   
+ 3 Tumor_Size                  0             1     4.95     1.81   0.339    3.42
+ 4 Radiation_Treatment         0             1     0.501    0.500  0        0   
+ 5 Surgery_Performed           0             1     0.503    0.500  0        0   
+ 6 Chemotherapy                0             1     0.505    0.500  0        0   
+ 7 Survival_Rate               0             1    86.4      5.85  67.1     82.0 
+ 8 Tumor_Growth_Rate           0             1     2.47     0.956 -0.160    1.70
+ 9 Family_History              0             1     0.500    0.500  0        0   
+10 MRI_Result                  0             1     5.19     1.97  -0.268    3.59
+11 Follow_Up_Required          0             1     0.505    0.500  0        0   
+        p50      p75     p100 hist 
+ 1 10000.   15000.   20000    ▇▇▇▇▇
+ 2    49       65       79    ▇▇▇▇▇
+ 3     4.95     6.45     9.36 ▂▇▇▇▂
+ 4     1        1        1    ▇▁▁▁▇
+ 5     1        1        1    ▇▁▁▁▇
+ 6     1        1        1    ▇▁▁▁▇
+ 7    86.5     90.8    100    ▁▃▇▇▃
+ 8     2.47     3.23     5.09 ▁▇▇▆▁
+ 9     0        1        1    ▇▁▁▁▇
+10     5.19     6.77    10.7  ▁▇▇▇▁
+11     1        1        1    ▇▁▁▁▇
+
+Descriptive Statistics for Numeric Variables:
+                      N      Mean    Median         SD        Min        Max
+Age               20000 49.433700 49.000000 17.3892962 20.0000000  79.000000
+Tumor_Size        20000  4.946220  4.954961  1.8098116  0.3394427   9.359087
+Survival_Rate     20000 86.408934 86.453678  5.8483295 67.1020540 100.000000
+Tumor_Growth_Rate 20000  2.470105  2.469242  0.9564337 -0.1595796   5.093616
+                      Range       IQR     Skewness Kurtosis
+Age               59.000000 31.000000  0.009532157 1.795973
+Tumor_Size         9.019644  3.034083  0.007362732 1.963110
+Survival_Rate     32.897946  8.757434 -0.030188716 2.402087
+Tumor_Growth_Rate  5.253195  1.531927  0.014697104 2.150409
+
+Descriptive Statistics for Categorical Variables:
+$Gender
+  Category Frequency Percentage
+1     Male      9984      49.92
+2   Female     10016      50.08
+
+$Tumor_Type
+   Category Frequency Percentage
+1    Benign      9970      49.85
+2 Malignant     10030      50.15
+
+$Location
+   Category Frequency Percentage
+1   Frontal      4925      24.62
+2 Occipital      4967      24.83
+3  Parietal      4990      24.95
+4  Temporal      5118      25.59
+
+$Histology
+         Category Frequency Percentage
+1     Astrocytoma      4937      24.69
+2    Glioblastoma      5068      25.34
+3 Medulloblastoma      4979      24.90
+4      Meningioma      5016      25.08
+
+$Stage
+  Category Frequency Percentage
+1        I      4986      24.93
+2       II      5093      25.46
+3      III      4953      24.76
+4       IV      4968      24.84
+
+$Symptom_1
+       Category Frequency Percentage
+1      Headache      5045      25.22
+2        Nausea      4969      24.84
+3      Seizures      5028      25.14
+4 Vision Issues      4958      24.79
+
+$Symptom_2
+       Category Frequency Percentage
+1      Headache      4996      24.98
+2        Nausea      4931      24.65
+3      Seizures      5054      25.27
+4 Vision Issues      5019      25.09
+
+$Symptom_3
+       Category Frequency Percentage
+1      Headache      4954      24.77
+2        Nausea      5012      25.06
+3      Seizures      5027      25.14
+4 Vision Issues      5007      25.04
+
+$Radiation_Treatment
+  Category Frequency Percentage
+1       No         0        NaN
+2      Yes         0        NaN
+
+$Surgery_Performed
+  Category Frequency Percentage
+1       No         0        NaN
+2      Yes         0        NaN
+
+$Chemotherapy
+  Category Frequency Percentage
+1       No         0        NaN
+2      Yes         0        NaN
+
+$Family_History
+  Category Frequency Percentage
+1       No         0        NaN
+2      Yes         0        NaN
+
+$MRI_Result
+  Category Frequency Percentage
+1 Negative         0        NaN
+2 Positive         0        NaN
+
+$Follow_Up_Required
+  Category Frequency Percentage
+1       No         0        NaN
+2      Yes         0        NaN
+
+$Survival_Binary
+  Category Frequency Percentage
+1     Poor         0          0
+2     Good     20000        100
+
+
+Correlation Matrix:
+                         Age Tumor_Size Survival_Rate Tumor_Growth_Rate
+Age                1.0000000  0.9609012    -0.8204958         0.9111029
+Tumor_Size         0.9609012  1.0000000    -0.8545980         0.9497525
+Survival_Rate     -0.8204958 -0.8545980     1.0000000        -0.8356916
+Tumor_Growth_Rate  0.9111029  0.9497525    -0.8356916         1.0000000
+
+Descriptive Stats by Tumor Type (Malignant vs Benign):
+
+ Descriptive statistics by group 
+group: Benign
+                  vars    n  mean    sd median trimmed   mad   min    max range
+Age                  1 9970 49.33 17.47  49.00   49.29 22.24 20.00  79.00 59.00
+Tumor_Size           2 9970  4.93  1.82   4.92    4.93  2.26  0.60   9.22  8.62
+Survival_Rate        3 9970 86.44  5.86  86.49   86.44  6.48 67.87 100.00 32.13
+Tumor_Growth_Rate    4 9970  2.46  0.96   2.46    2.46  1.15 -0.15   4.98  5.13
+                   skew kurtosis   se
+Age                0.02    -1.21 0.17
+Tumor_Size         0.02    -1.05 0.02
+Survival_Rate     -0.02    -0.60 0.06
+Tumor_Growth_Rate  0.02    -0.87 0.01
+------------------------------------------------------------ 
+group: Malignant
+                  vars     n  mean    sd median trimmed   mad   min    max
+Age                  1 10030 49.53 17.31  50.00   49.53 22.24 20.00  79.00
+Tumor_Size           2 10030  4.96  1.80   4.99    4.96  2.23  0.34   9.36
+Survival_Rate        3 10030 86.38  5.84  86.42   86.40  6.50 67.10 100.00
+Tumor_Growth_Rate    4 10030  2.48  0.95   2.48    2.48  1.12 -0.16   5.09
+                  range  skew kurtosis   se
+Age               59.00  0.00    -1.20 0.17
+Tumor_Size         9.02  0.00    -1.03 0.02
+Survival_Rate     32.90 -0.04    -0.60 0.06
+Tumor_Growth_Rate  5.25  0.01    -0.83 0.01
