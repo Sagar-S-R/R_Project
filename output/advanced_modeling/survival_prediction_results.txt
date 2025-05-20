@@ -1,0 +1,26 @@
+
+Variance Inflation Factors (VIF):
+Tumor_Size Tumor_Type 
+  1.000092   1.000092 
+
+Survival Prediction Model Summary:
+
+Call:
+lm(formula = Survival_Rate ~ Tumor_Size + Tumor_Type, data = data_model_lr)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-13.3440  -2.0232   0.0039   2.0787  10.1683 
+
+Coefficients:
+                     Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)         99.803162   0.096093 1038.610   <2e-16 ***
+Tumor_Size          -0.298060   0.001997 -149.285   <2e-16 ***
+Tumor_TypeMalignant  0.047380   0.049484    0.957    0.338    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.039 on 15089 degrees of freedom
+Multiple R-squared:  0.5963,	Adjusted R-squared:  0.5962 
+F-statistic: 1.114e+04 on 2 and 15089 DF,  p-value: < 2.2e-16
+

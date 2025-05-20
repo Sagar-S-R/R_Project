@@ -115,11 +115,13 @@ Age               20000 49.433700 49.000000 17.3892962 20.0000000  79.000000
 Tumor_Size        20000  4.946220  4.954961  1.8098116  0.3394427   9.359087
 Survival_Rate     20000 86.408934 86.453678  5.8483295 67.1020540 100.000000
 Tumor_Growth_Rate 20000  2.470105  2.469242  0.9564337 -0.1595796   5.093616
+MRI_Result        20000  5.194534  5.189687  1.9683929 -0.2680959  10.692990
                       Range       IQR     Skewness Kurtosis
 Age               59.000000 31.000000  0.009532157 1.795973
 Tumor_Size         9.019644  3.034083  0.007362732 1.963110
 Survival_Rate     32.897946  8.757434 -0.030188716 2.402087
 Tumor_Growth_Rate  5.253195  1.531927  0.014697104 2.150409
+MRI_Result        10.961086  3.181344  0.009818577 2.099539
 
 Descriptive Statistics for Categorical Variables:
 $Gender
@@ -176,33 +178,28 @@ $Symptom_3
 
 $Radiation_Treatment
   Category Frequency Percentage
-1       No         0        NaN
-2      Yes         0        NaN
+1       No      9979       49.9
+2      Yes     10021       50.1
 
 $Surgery_Performed
   Category Frequency Percentage
-1       No         0        NaN
-2      Yes         0        NaN
+1       No      9940       49.7
+2      Yes     10060       50.3
 
 $Chemotherapy
   Category Frequency Percentage
-1       No         0        NaN
-2      Yes         0        NaN
+1       No      9903      49.52
+2      Yes     10097      50.48
 
 $Family_History
   Category Frequency Percentage
-1       No         0        NaN
-2      Yes         0        NaN
-
-$MRI_Result
-  Category Frequency Percentage
-1 Negative         0        NaN
-2 Positive         0        NaN
+1       No     10002      50.01
+2      Yes      9998      49.99
 
 $Follow_Up_Required
   Category Frequency Percentage
-1       No         0        NaN
-2      Yes         0        NaN
+1       No      9899      49.49
+2      Yes     10101      50.51
 
 $Survival_Binary
   Category Frequency Percentage
@@ -216,6 +213,13 @@ Age                1.0000000  0.9609012    -0.8204958         0.9111029
 Tumor_Size         0.9609012  1.0000000    -0.8545980         0.9497525
 Survival_Rate     -0.8204958 -0.8545980     1.0000000        -0.8356916
 Tumor_Growth_Rate  0.9111029  0.9497525    -0.8356916         1.0000000
+MRI_Result         0.9263894  0.9640576    -0.8281456         0.9400798
+                  MRI_Result
+Age                0.9263894
+Tumor_Size         0.9640576
+Survival_Rate     -0.8281456
+Tumor_Growth_Rate  0.9400798
+MRI_Result         1.0000000
 
 Descriptive Stats by Tumor Type (Malignant vs Benign):
 
@@ -226,11 +230,13 @@ Age                  1 9970 49.33 17.47  49.00   49.29 22.24 20.00  79.00 59.00
 Tumor_Size           2 9970  4.93  1.82   4.92    4.93  2.26  0.60   9.22  8.62
 Survival_Rate        3 9970 86.44  5.86  86.49   86.44  6.48 67.87 100.00 32.13
 Tumor_Growth_Rate    4 9970  2.46  0.96   2.46    2.46  1.15 -0.15   4.98  5.13
+MRI_Result           5 9970  5.18  1.97   5.16    5.17  2.37 -0.27  10.26 10.53
                    skew kurtosis   se
 Age                0.02    -1.21 0.17
 Tumor_Size         0.02    -1.05 0.02
 Survival_Rate     -0.02    -0.60 0.06
 Tumor_Growth_Rate  0.02    -0.87 0.01
+MRI_Result         0.01    -0.91 0.02
 ------------------------------------------------------------ 
 group: Malignant
                   vars     n  mean    sd median trimmed   mad   min    max
@@ -238,8 +244,30 @@ Age                  1 10030 49.53 17.31  50.00   49.53 22.24 20.00  79.00
 Tumor_Size           2 10030  4.96  1.80   4.99    4.96  2.23  0.34   9.36
 Survival_Rate        3 10030 86.38  5.84  86.42   86.40  6.50 67.10 100.00
 Tumor_Growth_Rate    4 10030  2.48  0.95   2.48    2.48  1.12 -0.16   5.09
+MRI_Result           5 10030  5.21  1.96   5.22    5.21  2.34 -0.07  10.69
                   range  skew kurtosis   se
 Age               59.00  0.00    -1.20 0.17
 Tumor_Size         9.02  0.00    -1.03 0.02
 Survival_Rate     32.90 -0.04    -0.60 0.06
 Tumor_Growth_Rate  5.25  0.01    -0.83 0.01
+MRI_Result        10.77  0.01    -0.89 0.02
+
+Descriptive Stats by Survival Binary (Good vs Poor):
+
+ Descriptive statistics by group 
+group: Poor
+NULL
+------------------------------------------------------------ 
+group: Good
+                  vars     n  mean    sd median trimmed   mad   min    max
+Age                  1 20000 49.43 17.39  49.00   49.41 22.24 20.00  79.00
+Tumor_Size           2 20000  4.95  1.81   4.95    4.94  2.25  0.34   9.36
+Survival_Rate        3 20000 86.41  5.85  86.45   86.42  6.50 67.10 100.00
+Tumor_Growth_Rate    4 20000  2.47  0.96   2.47    2.47  1.14 -0.16   5.09
+MRI_Result           5 20000  5.19  1.97   5.19    5.19  2.36 -0.27  10.69
+                  range  skew kurtosis   se
+Age               59.00  0.01    -1.20 0.12
+Tumor_Size         9.02  0.01    -1.04 0.01
+Survival_Rate     32.90 -0.03    -0.60 0.04
+Tumor_Growth_Rate  5.25  0.01    -0.85 0.01
+MRI_Result        10.96  0.01    -0.90 0.01

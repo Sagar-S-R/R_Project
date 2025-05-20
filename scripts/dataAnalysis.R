@@ -241,41 +241,6 @@ p6 <- ggplot(data_sample, aes(x = Age, fill = Survival_Binary)) +
   create_vibrant_theme()
 ggsave("plots/dataAnalysis/age_distribution_by_gender_survival.png", p6, width = 10, height = 7, bg = "white")
 
-# 7. Predicted Survival Rate by Age and Tumor Size
-tryCatch({
-  model <- lm(Survival_Rate ~ Age + Tumor_Size + Tumor_Growth_Rate + Tumor_Type, data = data)
-  age_range <- seq(min(data$Age), max(data$Age), length.out = 20)
-  size_range <- seq(min(data$Tumor_Size), max(data$Tumor_Size), length.out = 20)
-  prediction_grid <- expand.grid(
-    Age = age_range,
-    Tumor_Size = size_range,
-    Tumor_Growth_Rate = median(data$Tumor_Growth_Rate),
-    Tumor_Type = factor("Malignant", levels = levels(data$Tumor_Type))
-  )
-  prediction_grid$Predicted_Survival <- predict(model, newdata = prediction_grid)
-  p7 <- ggplot(prediction_grid, aes(x = Age, y = Tumor_Size, fill = Predicted_Survival)) +
-    geom_tile() +
-    scale_fill_viridis_c(option = "plasma", name = "Predicted\nSurvival Rate") +
-    labs(
-      title = "Predicted Survival Rate by Age and Tumor Size",
-      subtitle = "Based on linear regression model",
-      x = "Age (years)",
-      y = "Tumor Size (cm)"
-    ) +
-    theme_minimal() +
-    theme(
-      plot.background = element_rect(fill = "white", color = NA),
-      panel.background = element_rect(fill = "#F8F8F8", color = NA),
-      plot.title = element_text(face = "bold", size = 16),
-      plot.subtitle = element_text(size = 12)
-    )
-  ggsave("plots/dataAnalysis/survival_prediction_heatmap.png", p7, width = 10, height = 8, bg = "white")
-  cat("\nSurvival Prediction Model Summary:\n")
-  print(summary(model))
-}, error = function(e) {
-  cat("Could not create survival prediction model:", e$message, "\n")
-})
-
 # 8. Mean Survival Rate by Symptom and Tumor Type
 symptom_counts <- c(table(data$Symptom_1), table(data$Symptom_2), table(data$Symptom_3))
 symptom_counts <- sort(symptom_counts, decreasing = TRUE)

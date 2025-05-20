@@ -3,24 +3,25 @@ library(tidyverse)
 library(caret)
 library(randomForest)
 library(ROSE)
-library(glmnet)
 library(pROC)
-library(moments)
 library(gridExtra)
 library(corrplot)
-library(psych)
+library(car)  # For VIF in linear regression
 
 # Create output directories
 dir.create("output/advanced_modeling", recursive = TRUE, showWarnings = FALSE)
 dir.create("plots/advanced_modeling", recursive = TRUE, showWarnings = FALSE)
 
-# Redirect output
+
+# Redirect output for Random Forest
 sink("output/advanced_modeling/advanced_modeling_results.txt")
 
 # Load and preprocess data
 data <- read.csv("data/processed/brain_tumor_data_clean.csv") %>%
   dplyr::select(-Patient_ID) %>%
   filter(complete.cases(.), Age >= 0, Age <= 100, Survival_Rate >= 0, Survival_Rate <= 100, Tumor_Size > 0)
+
+# Convert categorical variables to factors
 data[, c("Gender", "Tumor_Type", "Location", "Histology", "Stage", "Radiation_Treatment",
          "Surgery_Performed", "Chemotherapy", "Family_History", "MRI_Result",
          "Follow_Up_Required", "Survival_Binary")] <- lapply(data[, c("Gender", "Tumor_Type", "Location",
@@ -40,86 +41,39 @@ if (length(unique(data$Survival_Binary)) < 2) {
   data$Survival_Binary_New <- data$Survival_Binary
 }
 
-# Normalize numeric columns
+# Create copies of the data for each analysis
+data_rf <- data  # For Random Forest (normalized)
+data_lr <- data  # For Linear Regression (will be unnormalized)
+
+# Normalize numeric columns for Random Forest
 numeric_cols <- c("Age", "Tumor_Size", "Tumor_Growth_Rate")
-data[numeric_cols] <- lapply(data[numeric_cols], function(x) (x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE)))
+data_rf[numeric_cols] <- lapply(data_rf[numeric_cols], function(x) (x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE)))
 
-# Univariate Analysis
-describe_numeric <- function(x) {
-  data.frame(N = length(na.omit(x)), Mean = mean(x, na.rm = TRUE), Median = median(x, na.rm = TRUE),
-             SD = sd(x, na.rm = TRUE), Min = min(x, na.rm = TRUE), Max = max(x, na.rm = TRUE),
-             Range = max(x, na.rm = TRUE) - min(x, na.rm = TRUE), IQR = IQR(x, na.rm = TRUE),
-             Skewness = skewness(x, na.rm = TRUE), Kurtosis = kurtosis(x, na.rm = TRUE))
-}
-describe_categorical <- function(x) {
-  freq <- table(x)
-  data.frame(Category = names(freq), Frequency = as.numeric(freq),
-             Percentage = round(as.numeric(prop.table(freq)) * 100, 2))
-}
-numeric_stats <- do.call(rbind, lapply(data[numeric_cols], describe_numeric))
-rownames(numeric_stats) <- numeric_cols
-sink(); sink("output/advanced_modeling/numeric_descriptive_stats.txt", append = TRUE)
-cat("Numeric Descriptive Statistics:\n")
-print(numeric_stats)
-sink(); sink("output/advanced_modeling/advanced_modeling_results.txt", append = TRUE)
-categorical_cols <- c("Gender", "Tumor_Type", "Location", "Histology", "Stage", "Radiation_Treatment",
-                      "Surgery_Performed", "Chemotherapy", "Family_History", "MRI_Result", "Follow_Up_Required", "Survival_Binary")
-cat_stats <- lapply(data[categorical_cols], describe_categorical)
-sink(); sink("output/advanced_modeling/categorical_descriptive_stats.txt", append = TRUE)
-cat("Categorical Descriptive Statistics:\n")
-for (i in seq_along(cat_stats)) {
-  cat(names(cat_stats)[i], ":\n")
-  print(cat_stats[[i]])
-}
-sink(); sink("output/advanced_modeling/advanced_modeling_results.txt", append = TRUE)
+# Unnormalize numeric columns for Linear Regression
+data_lr$Age <- data_lr$Age * (79 - 20) + 20  # Original range: 20 to 79
+data_lr$Tumor_Size <- data_lr$Tumor_Size * (9.3591 - 0.3394) + 0.3394  # Original range: 0.3394 to 9.3591
+data_lr$Tumor_Growth_Rate <- data_lr$Tumor_Growth_Rate * (5.0936 - (-0.1596)) + (-0.1596)  # Original range: -0.1596 to 5.0936
 
-# Numeric visualizations
-for (col in numeric_cols) {
-  p1 <- ggplot(data, aes(x = !!sym(col))) +
-    geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "skyblue", color = "black") +
-    geom_density(alpha = 0.5, fill = "orange") + ggtitle(paste("Histogram of", col)) + theme_minimal()
-  p2 <- ggplot(data, aes(y = !!sym(col))) +
-    geom_boxplot(fill = "lightgreen", color = "black") + ggtitle(paste("Boxplot of", col)) + theme_minimal()
-  p3 <- ggplot(data, aes(sample = !!sym(col))) +
-    stat_qq() + stat_qq_line() + ggtitle(paste("Q-Q Plot of", col)) + theme_minimal()
-  combined_plot <- grid.arrange(p1, p2, p3, ncol = 3)
-  ggsave(paste0("plots/advanced_modeling/", col, "_distribution.png"), combined_plot, width = 15, height = 5)
-}
-
-# Multivariate Analysis
-cor_matrix <- cor(data[, numeric_cols], use = "complete.obs")
-sink(); sink("output/advanced_modeling/correlation_matrix.txt", append = TRUE)
-cat("Correlation Matrix:\n")
-print(cor_matrix)
-sink(); sink("output/advanced_modeling/advanced_modeling_results.txt", append = TRUE)
-png("plots/advanced_modeling/correlation_heatmap.png", width = 800, height = 600)
-corrplot(cor_matrix, method = "color", type = "upper", tl.cex = 0.8, addCoef.col = "black")
-dev.off()
-png("plots/advanced_modeling/scatterplot_matrix.png", width = 1000, height = 1000)
-pairs(data[, numeric_cols], main = "Scatterplot Matrix")
-dev.off()
-sink(); sink("output/advanced_modeling/stats_by_gender.txt", append = TRUE)
-cat("Stats by Gender:\n")
-print(describeBy(data[numeric_cols], group = data$Gender))
-sink(); sink("output/advanced_modeling/advanced_modeling_results.txt", append = TRUE)
-sink(); sink("output/advanced_modeling/stats_by_survival.txt", append = TRUE)
-cat("Stats by Survival:\n")
-print(describeBy(data[numeric_cols], group = data$Survival_Binary))
-sink(); sink("output/advanced_modeling/advanced_modeling_results.txt", append = TRUE)
-
-# Machine Learning
+# --- Random Forest Analysis ---
+# Machine Learning for Random Forest
 set.seed(123)
 features <- c("Age", "Gender", "Tumor_Type", "Tumor_Size", "Location", "Histology", "Stage",
               "Tumor_Growth_Rate", "Radiation_Treatment", "Surgery_Performed", "Chemotherapy", "Family_History")
-data_model <- data[, c(features, "Survival_Binary_New")]
+data_model_rf <- data_rf[, c(features, "Survival_Binary_New")]
+
+# Remove outliers for Random Forest
 for (col in numeric_cols) {
-  q <- quantile(data_model[[col]], c(0.05, 0.95), na.rm = TRUE)
-  data_model <- data_model[data_model[[col]] >= q[1] & data_model[[col]] <= q[2], ]
+  q <- quantile(data_model_rf[[col]], c(0.05, 0.95), na.rm = TRUE)
+  data_model_rf <- data_model_rf[data_model_rf[[col]] >= q[1] & data_model_rf[[col]] <= q[2], ]
 }
-data_model <- na.omit(data_model)
-train_idx <- createDataPartition(data_model$Survival_Binary_New, p = 0.7, list = FALSE)
-train_data <- data_model[train_idx, ]
-test_data <- data_model[-train_idx, ]
+data_model_rf <- na.omit(data_model_rf)
+
+# Split data into training and testing sets
+train_idx <- createDataPartition(data_model_rf$Survival_Binary_New, p = 0.7, list = FALSE)
+train_data <- data_model_rf[train_idx, ]
+test_data <- data_model_rf[-train_idx, ]
+
+# Check training class distribution and balance if necessary
 cat("Training class distribution:\n")
 print(table(train_data$Survival_Binary_New))
 if (length(unique(train_data$Survival_Binary_New)) >= 2) {
@@ -129,54 +83,99 @@ if (length(unique(train_data$Survival_Binary_New)) >= 2) {
   sink()
   stop("Single class in training data")
 }
+
+# Train Random Forest model
 rf <- randomForest(Survival_Binary_New ~ ., data = train_data, ntree = 50)
+
+# Feature Importance
 imp <- importance(rf)
 imp_df <- data.frame(Feature = rownames(imp), Importance = imp[, "MeanDecreaseGini"])[1:8, ]
 imp_df <- imp_df[order(-imp_df$Importance), ]
-sink(); sink("output/advanced_modeling/feature_importance.txt", append = TRUE)
+
+# Output top 8 features to file
+sink()
+sink("output/advanced_modeling/feature_importance.txt", append = TRUE)
 cat("Top 8 Features:\n")
 print(imp_df$Feature)
-sink(); sink("output/advanced_modeling/advanced_modeling_results.txt", append = TRUE)
+sink()
+sink("output/advanced_modeling/advanced_modeling_results.txt", append = TRUE)
+
+# Plot feature importance
 png("plots/advanced_modeling/feature_importance.png", width = 800, height = 600)
 ggplot(imp_df, aes(x = reorder(Feature, Importance), y = Importance)) +
-  geom_bar(stat = "identity", fill = "steelblue") + coord_flip() +
-  labs(title = "Feature Importance", x = "Feature") + theme_minimal()
-dev.off()
-train_subset <- train_data[, c(imp_df$Feature, "Survival_Binary_New")]
-test_subset <- test_data[, c(imp_df$Feature, "Survival_Binary_New")]
-x_train <- model.matrix(Survival_Binary_New ~ ., train_subset)[, -1]
-x_test <- model.matrix(Survival_Binary_New ~ ., test_subset)[, -1]
-y_train <- train_subset$Survival_Binary_New
-log_model <- cv.glmnet(x_train, y_train, family = "binomial", alpha = 1, nfolds = 5)
-log_pred_prob <- as.numeric(predict(log_model, x_test, type = "response", s = "lambda.min"))
-roc_obj <- roc(test_subset$Survival_Binary_New, log_pred_prob)
-threshold <- coords(roc_obj, "best", ret = "threshold")$threshold
-log_pred <- factor(ifelse(log_pred_prob > threshold, "1", "0"), levels = c("0", "1"))
-cm <- confusionMatrix(log_pred, test_subset$Survival_Binary_New)
-metrics <- data.frame(Metric = c("Accuracy", "F1-Score", "AUC-ROC"),
-                      Value = c(mean(log_pred == test_subset$Survival_Binary_New), cm$byClass["F1"], auc(roc_obj)))
-sink(); sink("output/advanced_modeling/logistic_regression_metrics.txt", append = TRUE)
-print(metrics)
-sink(); sink("output/advanced_modeling/advanced_modeling_results.txt", append = TRUE)
-cm_table <- cm$table
-cm_percent <- round((cm_table / nrow(test_subset)) * 100, 2)
-cm_combined <- matrix(paste0(cm_table, " (", cm_percent, "%)"), nrow = 2)
-dimnames(cm_combined) <- dimnames(cm_table)
-sink(); sink("output/advanced_modeling/logistic_regression_confusion_matrix.txt", append = TRUE)
-print(cm_combined)
-sink(); sink("output/advanced_modeling/advanced_modeling_results.txt", append = TRUE)
-cm_df <- as.data.frame(as.table(cm_table))
-colnames(cm_df) <- c("Prediction", "Reference", "Freq")
-png("plots/advanced_modeling/logistic_regression_confusion_matrix.png", width = 800, height = 600)
-ggplot(cm_df, aes(x = Reference, y = Prediction, fill = Freq)) +
-  geom_tile() + geom_text(aes(label = Freq), color = "white") +
-  scale_fill_gradient(low = "blue", high = "red") +
-  labs(title = "Logistic Regression Confusion Matrix", x = "Actual", y = "Predicted") +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Feature Importance", x = "Feature") +
   theme_minimal()
 dev.off()
 
 # Close all graphics devices
 graphics.off()
 
-# Close sink
+# Close sink for Random Forest
+sink()
+
+# --- Linear Regression Analysis ---
+# Redirect output for Linear Regression
+sink("output/advanced_modeling/survival_prediction_results.txt")
+
+# Remove outliers for Linear Regression (in original scale)
+# Load required library for VIF
+library(car)
+
+# Remove outliers for Linear Regression
+data_model_lr <- data_lr
+numeric_cols <- c("Age", "Tumor_Size", "Tumor_Growth_Rate")
+for (col in numeric_cols) {
+  q <- quantile(data_model_lr[[col]], c(0.05, 0.95), na.rm = TRUE)
+  data_model_lr <- data_model_lr[data_model_lr[[col]] >= q[1] & data_model_lr[[col]] <= q[2], ]
+}
+data_model_lr <- na.omit(data_model_lr)
+
+# Fit a simplified linear regression model (already dropped Tumor_Growth_Rate, now dropping Age)
+model <- lm(Survival_Rate ~ Tumor_Size + Tumor_Type, data = data_model_lr)
+
+# Check for multicollinearity
+cat("\nVariance Inflation Factors (VIF):\n")
+print(vif(model))
+
+# Create prediction grid without Age
+size_range <- seq(min(data_model_lr$Tumor_Size), max(data_model_lr$Tumor_Size), length.out = 20)  # 1.2 to 8.2 (after outlier removal)
+prediction_grid <- expand.grid(
+  Tumor_Size = size_range,
+  Tumor_Type = factor("Malignant", levels = levels(data_model_lr$Tumor_Type))
+)
+
+# Predict survival rates
+prediction_grid$Predicted_Survival <- predict(model, newdata = prediction_grid)
+
+# Ensure predictions are within the valid range [67.10, 100]
+prediction_grid$Predicted_Survival <- pmin(pmax(prediction_grid$Predicted_Survival, 67.10), 100)
+
+# Create a line plot (since Age is dropped, we only vary Tumor_Size)
+p7 <- ggplot(prediction_grid, aes(x = Tumor_Size, y = Predicted_Survival)) +
+  geom_line(color = "steelblue", size = 1.5) +
+  geom_point(color = "steelblue", size = 3) +
+  labs(
+    title = "Predicted Survival Rate by Tumor Size",
+    subtitle = "Based on linear regression model (Tumor Type: Malignant)",
+    x = "Tumor Size (cm)",
+    y = "Predicted Survival Rate (%)"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.background = element_rect(fill = "#F8F8F8", color = NA),
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12)
+  )
+
+# Save the plot
+ggsave("plots/advanced_modeling/survival_prediction_lineplot.png", p7, width = 10, height = 8, bg = "white")
+
+# Print model summary
+cat("\nSurvival Prediction Model Summary:\n")
+print(summary(model))
+
+# Close sink for Linear Regression
 sink()

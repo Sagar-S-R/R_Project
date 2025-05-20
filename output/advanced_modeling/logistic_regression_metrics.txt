@@ -1,4 +1,0 @@
-    Metric     Value
-1 Accuracy 0.1866578
-2 F1-Score 0.1828673
-3  AUC-ROC 0.8943025

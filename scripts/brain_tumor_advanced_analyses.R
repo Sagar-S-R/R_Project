@@ -33,7 +33,7 @@ cat("\nSummary of the dataset:\n")
 summary(data)
 
 cat("\nDetailed skim summary:\n")
-print(skim(data))  # skim prints as a tibble, so use print()
+print(skim(data))
 
 # --- CONVERT CATEGORICAL VARIABLES TO FACTORS ---
 data <- data %>%
@@ -46,20 +46,23 @@ data <- data %>%
     Symptom_1 = factor(Symptom_1),
     Symptom_2 = factor(Symptom_2),
     Symptom_3 = factor(Symptom_3),
-    Radiation_Treatment = factor(Radiation_Treatment, levels = c("No", "Yes")),
-    Surgery_Performed = factor(Surgery_Performed, levels = c("No", "Yes")),
-    Chemotherapy = factor(Chemotherapy, levels = c("No", "Yes")),
-    Family_History = factor(Family_History, levels = c("No", "Yes")),
-    MRI_Result = factor(MRI_Result, levels = c("Negative", "Positive")),
-    Follow_Up_Required = factor(Follow_Up_Required, levels = c("No", "Yes")),
+    Radiation_Treatment = factor(Radiation_Treatment, levels = c(0, 1), labels = c("No", "Yes")),
+    Surgery_Performed = factor(Surgery_Performed, levels = c(0, 1), labels = c("No", "Yes")),
+    Chemotherapy = factor(Chemotherapy, levels = c(0, 1), labels = c("No", "Yes")),
+    Family_History = factor(Family_History, levels = c(0, 1), labels = c("No", "Yes")),
+    Follow_Up_Required = factor(Follow_Up_Required, levels = c(0, 1), labels = c("No", "Yes")),
     Survival_Binary = factor(Survival_Binary, levels = c("Poor", "Good"))
+    # Note: MRI_Result is numeric, not converted to factor
+    # If Survival_Binary needs thresholding (e.g., Survival_Rate < 80 = "Poor"), uncomment:
+    # Survival_Binary = factor(ifelse(Survival_Rate >= 80, "Good", "Poor"), levels = c("Poor", "Good"))
   )
 
-numeric_cols <- c("Age", "Tumor_Size", "Survival_Rate", "Tumor_Growth_Rate")
+# Define numeric and categorical columns
+numeric_cols <- c("Age", "Tumor_Size", "Survival_Rate", "Tumor_Growth_Rate", "MRI_Result")
 categorical_cols <- c("Gender", "Tumor_Type", "Location", "Histology", "Stage", 
-                      "Symptom_1", "Symptom_2", "Symptom_3", "Radiation_Treatment", 
-                      "Surgery_Performed", "Chemotherapy", "Family_History", 
-                      "MRI_Result", "Follow_Up_Required", "Survival_Binary")
+                     "Symptom_1", "Symptom_2", "Symptom_3", "Radiation_Treatment", 
+                     "Surgery_Performed", "Chemotherapy", "Family_History", 
+                     "Follow_Up_Required", "Survival_Binary")
 
 # --- DESCRIPTIVE STATISTICS FUNCTIONS ---
 describe_numeric <- function(x) {
@@ -121,33 +124,53 @@ print(survival_desc)
 # Stop writing to file
 sink()
 
-# Create output directory if it doesn't exist
+
+
+# Create output directory for plots if it doesn't exist
 if (!dir.exists("plots/advanced_analyses")) {
   dir.create("plots/advanced_analyses", recursive = TRUE)
 }
 
-# Save only histogram and boxplot for each numeric variable
-for (col in numeric_cols) {
+# Define a colorful palette
+color_palette <- c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd")  # Blue, Orange, Green, Red, Purple
+
+# Save histogram and boxplot for each numeric variable
+for (i in seq_along(numeric_cols)) {
+  col <- numeric_cols[i]
+  col_color <- color_palette[i %% length(color_palette) + 1]  # Cycle through colors
+  
   # Histogram + Density
   p1 <- ggplot(data, aes_string(x = col)) +
-    geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
-    geom_density(alpha = 0.5, fill = "orange") +
+    geom_histogram(aes(y = ..density..), bins = 30, fill = col_color, color = "black", alpha = 0.7) +
+    geom_density(alpha = 0.3, fill = col_color, color = col_color) +
     ggtitle(paste("Histogram of", col)) +
-    theme_minimal()
+    theme_minimal() +
+    theme(plot.background = element_rect(fill = "white", color = NA),
+          panel.background = element_rect(fill = "white", color = NA),
+          axis.text = element_text(color = "black"),
+)
   
   ggsave(filename = paste0("plots/advanced_analyses/", col, "_hist_density.png"),
          plot = p1, width = 6, height = 4, dpi = 300)
 
   # Boxplot
   p2 <- ggplot(data, aes_string(y = col)) +
-    geom_boxplot(fill = "lightgreen", color = "black") +
+    geom_boxplot(fill = col_color, color = "black", alpha = 0.7) +
     ggtitle(paste("Boxplot of", col)) +
-    theme_minimal()
+    theme_minimal() +
+    theme(plot.background = element_rect(fill = "white", color = NA),
+          panel.background = element_rect(fill = "white", color = NA),
+          axis.text = element_text(color = "black"))
   
   ggsave(filename = paste0("plots/advanced_analyses/", col, "_boxplot.png"),
          plot = p2, width = 4, height = 4, dpi = 300)
 }
 
-png("plots/advanced_analyses/correlation_matrix.png", width = 800, height = 600)
-corrplot(cor_matrix, method = "color", type = "upper", tl.cex = 0.8, addCoef.col = "black")
+# Save correlation matrix plot
+png("plots/advanced_analyses/correlation_matrix.png", width = 800, height = 600, bg = "white")
+corrplot(cor_matrix, method = "color", type = "upper", tl.cex = 0.8, addCoef.col = "black",
+         col = colorRampPalette(c("#d62728", "#ffffff", "#1f77b4"))(200))
 dev.off()
+
+# Rest of the script (sink() closing, etc.) remains the same
+sink()
