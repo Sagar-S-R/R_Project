@@ -1,8 +1,5 @@
 # Brain_Tumor_Analysis_Project/.gitignore
 
-# Exclude large data files (raw and processed datasets)
-data/raw/*
-data/processed/*
 
 # R-specific exclusions
 *.Rproj
